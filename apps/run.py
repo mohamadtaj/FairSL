@@ -15,7 +15,10 @@ framework = args["framework"]
 mode = args["mode"]
 seed = 0
 num_nodes = 3
+
 node_fractions = [0.1, 0.3, 0.6] 
+# node_fractions = [0.10,0.12,0.38,0.40]
+
 
 if (framework == 'rf'):
     iterations = 100
@@ -25,13 +28,26 @@ BATCH_SIZE = 128
 
 if (data == 'cifar10'):
     data_type = 'img'
-    OPTIMIZER = tf.keras.optimizers.Adam()
+    OPTIMIZER = tf.keras.optimizers.legacy.Adam()
     LOSS = 'sparse_categorical_crossentropy'
     iterations = 100
+
+if (data == 'mnist'):
+    data_type = 'img'
+    OPTIMIZER = tf.keras.optimizers.legacy.Adam()
+    LOSS = 'sparse_categorical_crossentropy'
+    iterations = 100
+    BATCH_SIZE = 32
+    
+elif (data == 'cifar100'):
+    data_type = 'img'
+    OPTIMIZER = tf.keras.optimizers.legacy.Adam(learning_rate=0.005)
+    LOSS = 'sparse_categorical_crossentropy'
+    iterations = 30
     
 elif (data == 'reuters'):   
     data_type = 'txt'
-    OPTIMIZER = tf.keras.optimizers.Adam(learning_rate=0.003)
+    OPTIMIZER = tf.keras.optimizers.legacy.Adam(learning_rate=0.003)
     LOSS = 'sparse_categorical_crossentropy'
     iterations = 200
 

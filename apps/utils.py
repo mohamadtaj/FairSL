@@ -15,12 +15,23 @@ def load_data_rf(data):
     
     return X, y
 
+# def load_data_nn(data, data_type):
+
+    # x_train, y_train, x_test, y_test = load_dataset_nn(data)
+    # if (data_type == 'img'):
+        # x_train, x_test = scale (x_train, x_test)
+
+    # return x_train, y_train, x_test, y_test  
+
 def load_data_nn(data, data_type):
 
     x_train, y_train, x_test, y_test = load_dataset_nn(data)
     if (data_type == 'img'):
-        x_train, x_test = scale (x_train, x_test)
-    
+        if(not data=='cifar100'):
+            x_train, x_test = scale (x_train, x_test)
+        else:
+            print('Already preprocessed')
+
     return x_train, y_train, x_test, y_test  
     
 def split(n, fractions):
@@ -75,12 +86,16 @@ def reduce_size (X, y, train_size):
 
     return reduced_X, reduced_Y    
 
-def freeze_layers (node, dataset, cycle):
+def freeze_layers (node, dataset, cycle, num_nodes):
     if (dataset == 'cifar10'):
         freeze_layers_cifar10(node, cycle)
     elif(dataset == 'reuters'):
         freeze_layers_reuters(node, cycle)
-
+    elif(dataset == 'cifar100'):
+        freeze_layers_cifar100(node, cycle, num_nodes)
+    elif(dataset == 'mnist'):
+        freeze_layers_mnist(node, cycle, num_nodes)
+        
 def freeze_layers_cifar10(node, cycle):
     if (cycle == 2):
 
@@ -96,7 +111,66 @@ def freeze_layers_cifar10(node, cycle):
         node.nn_model.layers[0].trainable = False
         node.nn_model.layers[4].trainable = False 
         node.nn_model.layers[8].trainable = False 
-                    
+
+def freeze_layers_mnist(node, cycle):
+    if (num_nodes==3):
+        if (cycle == 2):
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0008)
+       
+            for layer in node.nn_model.layers[:5]: 
+                layer.trainable = False 
+                
+        elif (cycle == 3):
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0001)
+
+            for layer in node.nn_model.layers[:12]: 
+                layer.trainable = False 
+    
+    elif(num_nodes==4):
+        if (cycle == 2):
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0001)
+   
+            for layer in node.nn_model.layers[:12]: 
+                layer.trainable = False 
+                
+        elif (cycle == 3):
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.001)
+
+            for layer in node.nn_model.layers: 
+                layer.trainable = True 
+                
+            for layer in node.nn_model.layers[:5]: 
+                layer.trainable = False 
+        
+        elif (cycle == 4):  
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0001)
+
+            for layer in node.nn_model.layers[:12]: 
+                layer.trainable = False         
+        
+def freeze_layers_cifar100(node, cycle):
+    if (num_nodes==3):
+        if (cycle == 2):
+
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.003)
+
+        elif (cycle == 3):
+
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0005)
+    
+    elif(num_nodes==4):
+        if (cycle == 2):
+
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0001)
+
+        elif (cycle == 3):
+
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.001)
+            
+        elif (cycle == 4):
+
+            K.set_value(node.nn_model.optimizer.learning_rate, 0.0001)    
+        
 def freeze_layers_reuters(node, cycle):
     if (cycle == 2):
 

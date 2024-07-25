@@ -114,15 +114,18 @@ def run_nn_sim_fair (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, in
         print(f'Cycle {cycle} Training ... ')
         print("Nodes Participating: ")
         for node in env.nodes:
-            if(node.active):    
-                freeze_layers(node, dataset, cycle)                  
+            if(node.active):   
+                print(node.id)
+                freeze_layers(node, dataset, cycle, env.num_nodes)                  
 
         for epoch_num in range(EPOCHS):
-                 
+            
+            epoch_start_time = time.time()
+            
             train_nn_network_fair (env, mode, BATCH_SIZE, section, OPTIMIZER, LOSS)
             evaluate_nn_network (env, BATCH_SIZE)
 
-            print("EPOCH {} FINISHED".format(epoch_num + 1))
+            print("EPOCH {} FINISHED ---- Cycle: {}".format(epoch_num + 1, cycle))
             print()
             for node in env.nodes:
                 print(f'----------------------------Node {node.id} Train Loss = {node.nn_train_loss[-1]}')        
@@ -134,6 +137,9 @@ def run_nn_sim_fair (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, in
                 print()
 
             env.set_coordinator()
+            
+            print("Execution Time %s seconds: " % (time.time() - epoch_start_time))
+            print()
             
         env.nodes[section].active = False
         section+=1
@@ -155,7 +161,9 @@ def run_nn_sim_unfair (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, 
         node.define_nn_model(dataset, OPTIMIZER, LOSS, input_size, output_size)
         
     for epoch_num in range(EPOCHS):
-    
+        
+        epoch_start_time = time.time()
+        
         train_nn_network_unfair (env, mode, BATCH_SIZE, OPTIMIZER, LOSS)
         evaluate_nn_network (env, BATCH_SIZE)
         
@@ -167,8 +175,10 @@ def run_nn_sim_unfair (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, 
             print(f'----------------------------Node {node.id} Test Loss = {node.nn_test_loss[-1]}')
             print(f'----------------------------Node {node.id} Test Accuracy = {node.nn_test_accuracy[-1]}')
             print()
-
-    print(); print("Execution Time %s seconds: " % (time.time() - start_time))
+        print("Execution Time %s seconds: " % (time.time() - epoch_start_time))
+        print()
+        
+    print(); print("Total Execution Time %s seconds: " % (time.time() - start_time))
    
 def run_nn_sim_local (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, input_size, output_size):
 
@@ -185,7 +195,9 @@ def run_nn_sim_local (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, i
     
     
     for epoch_num in range(EPOCHS):
-    
+        
+        epoch_start_time = time.time()
+        
         train_nn_network_local (env, mode, BATCH_SIZE, OPTIMIZER, LOSS)
         evaluate_nn_network (env, BATCH_SIZE)
 
@@ -199,5 +211,7 @@ def run_nn_sim_local (env, mode, dataset, BATCH_SIZE, EPOCHS, OPTIMIZER, LOSS, i
             print(f'----------------------------Node {node.id} Test Accuracy = {node.nn_test_accuracy[-1]}')
             print()
 
-
+        print("Execution Time %s seconds: " % (time.time() - epoch_start_time))
+        print()
+        
     print(); print("Execution Time %s seconds: " % (time.time() - start_time))            

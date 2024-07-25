@@ -3,17 +3,18 @@ warnings.filterwarnings("ignore")
 
 import numpy as np
 import time
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
+# from tensorflow.compat.v1 import ConfigProto
+# from tensorflow.compat.v1 import InteractiveSession
 
 from peer import *
 from utils import *
 from sim import *
 
-config = ConfigProto()
-config.gpu_options.allow_growth = True
-config.gpu_options.per_process_gpu_memory_fraction = 0.5
-session = InteractiveSession(config=config)
+
+# config = ConfigProto()
+# config.gpu_options.allow_growth = True
+# config.gpu_options.per_process_gpu_memory_fraction = 0.5
+# session = InteractiveSession(config=config)
 
 def main_rf(data, num_nodes, node_fractions, n_estimators, augmentation, cv_splits, iterations, seed, mode):
 
@@ -34,7 +35,7 @@ def main_rf(data, num_nodes, node_fractions, n_estimators, augmentation, cv_spli
    
         print()
         print('___________________________________________________________________________')
-        print(f'Round {i+1} ... ')   
+        print(f'Round {i+1} ... ')
         
         env = Env(X, y, num_nodes, node_fractions, n_estimators)
         env.create_nodes(seed)

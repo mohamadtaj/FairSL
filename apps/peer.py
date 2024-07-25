@@ -231,7 +231,8 @@ class Node:
     def take_avg_params_fair(self):
         self_params = (self.id, self.nn_params)
         self.network_params.append(self_params)
-        params = np.array([x[1] for x in self.network_params])
+
+        params = np.array([x[1] for x in self.network_params], dtype=object)
                 
         avg = np.mean(params, axis=0)
         self.network_params = []
@@ -243,7 +244,7 @@ class Node:
         self.network_params.append(self_params)
         
         ids = [x[0] for x in self.network_params]
-        params = np.array([x[1] for x in self.network_params])
+        params = np.array([x[1] for x in self.network_params], dtype=object)
         sizes = np.array([self.nodes_sizes[id] for id in ids])
         
         avg = np.dot(sizes, params)/np.sum(sizes)

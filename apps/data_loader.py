@@ -1,16 +1,18 @@
 import pandas as pd
 import numpy as np
 import os
-import cv2
-from tensorflow.keras.datasets import cifar10, reuters
+#import cv2
+from tensorflow.keras.datasets import cifar10, reuters,cifar100, fashion_mnist
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.preprocessing import LabelEncoder
+
 
 import tensorflow as tf
 #from functools import partial  
     
 """load datasets for deep learning"""   
+
 def load_dataset_nn(data):
 
     if (data =="cifar" or data =="cifar10" or data =='CIFAR' or data =='CIFAR10'):
@@ -18,7 +20,25 @@ def load_dataset_nn(data):
         y_train = y_train.flatten()
         y_test = y_test.flatten()      
 
+    elif (data =="cifar100" or data =='CIFAR100'):
+        (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+        y_train = y_train.flatten()
+        y_test = y_test.flatten() 
+
         
+    elif (data =="mnist" or data =='MNIST'):
+        (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+        y_train = y_train.flatten()
+        y_test = y_test.flatten() 
+        
+        x_train = np.expand_dims(x_train, -1)
+        x_test = np.expand_dims(x_test, -1)
+        
+        np.random.seed(42)
+        indices = np.random.choice(x_train.shape[0], 2000, replace=False)
+        x_train = x_train[indices]
+        y_train = y_train[indices]
+
     elif (data =='reuters'):
         (x_train, y_train), (x_test, y_test) = reuters.load_data(
                                             num_words=10000,
@@ -152,5 +172,51 @@ def load_dataset_rf(data):
         y = y[permutation] 
         
         print('Train data shape: ',x.shape)       
+
+
+
+    elif (data == 'liver_disorders'):
+    
+        path = './datasets/liver_disorders'
+        data = pd.read_csv(os.path.join(path,'bupa.data'), encoding = 'utf-8', header=None)
+        data.columns = ['mcv', 'alkphos', 'sgpt', 'sgot', 'gammagt', 'drinks', 'Class']
+        
+        x = data.iloc[:,:-1].copy()
+        y = data.iloc[:, -1].copy()         
+        
+        x = x.to_numpy()
+        y = y.to_numpy()
+        
+        m = x.shape[0]
+        np.random.seed(0)
+        permutation = np.random.permutation(m)
+        x = x[permutation]
+        y = y[permutation] 
+        
+        print('Train data shape: ',x.shape)
+
+    elif (data == 'bank'):
+    
+        path = './datasets/bank'
+        data = pd.read_csv(os.path.join(path,'bank.csv'), encoding = 'utf-8', sep = ';')
+
+        cat_cols = ["job", "marital", "education","default","housing","loan","contact","month","poutcome"]
+        data[cat_cols] = data[cat_cols].apply(lambda col: pd.Categorical(col).codes)
+
+        data[["y"]] = data[["y"]].apply(lambda col: pd.Categorical(col).codes)
+
+        x = data.iloc[:,:-1].copy()
+        y = data.iloc[:, -1].copy()         
+        
+        x = x.to_numpy()
+        y = y.to_numpy()
+        
+        m = x.shape[0]
+        np.random.seed(0)
+        permutation = np.random.permutation(m)
+        x = x[permutation]
+        y = y[permutation] 
+        
+        print('Train data shape: ',x.shape)
         
     return x, y
