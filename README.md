@@ -11,6 +11,8 @@ Simulations consist of neural networks and random forest training on different d
 | Dataset  | Option |
 | ------------- | ------------- |
 | CIFAR-10  | --dataset cifar10  |
+| CIFAR-100  | --dataset cifar100  |
+| Fashion-MNIST  | --dataset mnist  |
 | Reuters Newswire  | --dataset reuters  |
 |  NATICUSdroid | --dataset android  |
 |  Breast Cancer | --dataset breast_cancer  |
@@ -33,7 +35,7 @@ Simulations consist of neural networks and random forest training on different d
 |  Local learning | --mode local  |
 
 ## Dataset Preparation:
-The CIFAR10 and Reuters newswire datasets will be automatically downloaded by the program. For the other six datasets, the user should download the datasets prior to running the code and put them in a folder named **datasets** in the same directory as the app files.
+The CIFAR10, CIFAR100, Fashion-MNIST, and Reuters newswire datasets will be automatically downloaded by the program. For the other six datasets, the user should download the datasets prior to running the code and put them in a folder named **datasets** in the same directory as the app files.
 Here are the links to download each dataset and the directories that should be created for each:
 
 | Dataset  | Download Link | Path |
