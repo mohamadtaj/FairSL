@@ -68,3 +68,5 @@ For example, to run the simulation for the CIFAR10 dataset using the Fair Swarm 
 python3 run.py --dataset cifar10 --framework nn --mode fair
 
 ```
+
+Note: You can change the number of nodes or the data ratios in the run.py file.
