@@ -1,9 +1,11 @@
 # FairSL
 
-This is a framework for fair swarm learning which is a collaborative machine learning system that takes into account participant's contributions.
+This is a framework for fair swarm learning, which is a collaborative machine learning system that takes into account participants' contributions.
 
 This repository provides simulations for the fair SL, typical SL, and local training (without cooperation). 
 Simulations consist of neural networks and random forest training on different datasets.
+
+Related publication: https://doi.org/10.1016/j.knosys.2024.112451
 
 ## Options:
 
